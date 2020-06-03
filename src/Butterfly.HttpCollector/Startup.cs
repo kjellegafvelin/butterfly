@@ -26,7 +26,8 @@ namespace Butterfly.HttpCollector
             {
                 option.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Instance));
                 option.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Instance));
-            });
+            })
+                .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
 
             services.Configure<HttpCollectorOptions>(option =>
             {
