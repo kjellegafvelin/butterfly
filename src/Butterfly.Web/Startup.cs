@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Swashbuckle.AspNetCore.Swagger;
 using Butterfly.Common;
 using Butterfly.HttpCollector;
+using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace Butterfly.Server
 {
@@ -27,10 +28,9 @@ namespace Butterfly.Server
         {
             var mvcBuilder = services.AddMvc(option =>
             {
-                option.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Instance));
-                option.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Instance));
-            })
-                .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
+                option.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Options));
+                option.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Options));
+            });
 
             mvcBuilder.AddApplicationPart(typeof(HttpCollectorOptions).Assembly);
 
@@ -42,7 +42,7 @@ namespace Butterfly.Server
 
             services.AddAutoMapper();
 
-            services.AddSwaggerGen(option => { option.SwaggerDoc("v1", new Info { Title = "butterfly http api", Version = "v1" }); });
+            services.AddSwaggerGen(option => { option.SwaggerDoc("v1", new OpenApiInfo { Title = "butterfly http api", Version = "v1" }); });
 
             services.AddLiteConsumer(Configuration)
                 .AddEntityFrameworkCore(Configuration);
@@ -51,7 +51,7 @@ namespace Butterfly.Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -76,15 +76,15 @@ namespace Butterfly.Server
             
             app.UseStaticFiles();
 
-            app.UseMvc(routes =>
+            app.UseRouting();
+
+            app.UseEndpoints(routes =>
             {
-                routes.MapRoute(
+                routes.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-                
-                routes.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new {controller = "Home", action = "Index"});
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapFallbackToController("Index", "Home");
             });
         }
     }

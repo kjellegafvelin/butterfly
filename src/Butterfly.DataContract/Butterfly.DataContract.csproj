@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\build\common.props" />
-  <Import Project="..\..\build\net45.props" />
   <PropertyGroup>
     <Description>
     </Description>
     <AssemblyTitle>Butterfly.DataContract</AssemblyTitle>
-    <TargetFrameworks>netstandard1.6;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AssemblyName>Butterfly.DataContract</AssemblyName>
     <PackageId>Butterfly.DataContract</PackageId>
@@ -15,7 +14,7 @@
     <RootNamespace>Butterfly.DataContract</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MessagePack" Version="1.7.3.4" />
-    <PackageReference Include="MessagePackAnalyzer" Version="1.6.0" />
+    <PackageReference Include="MessagePack" Version="2.1.115" />
+    <PackageReference Include="MessagePackAnalyzer" Version="2.1.115" />
   </ItemGroup>
 </Project>

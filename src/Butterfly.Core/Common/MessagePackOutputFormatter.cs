@@ -9,16 +9,16 @@ namespace Butterfly.Common
         const string ContentType = "application/x-msgpack";
         static readonly string[] SupportedContentTypes = new[] { ContentType };
 
-        readonly IFormatterResolver resolver;
+        private readonly MessagePackSerializerOptions options;
 
         public MessagePackOutputFormatter()
             : this(null)
         {
 
         }
-        public MessagePackOutputFormatter(IFormatterResolver resolver)
+        public MessagePackOutputFormatter(MessagePackSerializerOptions options)
         {
-            this.resolver = resolver ?? MessagePackSerializer.DefaultResolver;
+            this.options = options ?? MessagePackSerializer.DefaultOptions;
         }
 
         public bool CanWriteResult(OutputFormatterCanWriteContext context)
@@ -41,24 +41,22 @@ namespace Butterfly.Common
                 else
                 {
                     // use concrete type.
-                    MessagePackSerializer.NonGeneric.Serialize(context.Object.GetType(), context.HttpContext.Response.Body, context.Object, resolver);
-                    return Task.CompletedTask;
+                    return MessagePackSerializer.SerializeAsync(context.Object.GetType(), context.HttpContext.Response.Body, context.Object, options);
                 }
             }
             else
             {
-                MessagePackSerializer.NonGeneric.Serialize(context.ObjectType, context.HttpContext.Response.Body, context.Object, resolver);
-                return Task.CompletedTask;
+                return MessagePackSerializer.SerializeAsync(context.ObjectType, context.HttpContext.Response.Body, context.Object, options);
             }
         }
     }
 
     public class MessagePackInputFormatter : IInputFormatter // , IApiRequestFormatMetadataProvider
     {
-        const string ContentType = "application/x-msgpack";
-        static readonly string[] SupportedContentTypes = new[] { ContentType };
+        private const string ContentType = "application/x-msgpack";
+        private static readonly string[] SupportedContentTypes = new[] { ContentType };
 
-        readonly IFormatterResolver resolver;
+        private readonly MessagePackSerializerOptions options;
 
         public MessagePackInputFormatter()
             : this(null)
@@ -66,9 +64,9 @@ namespace Butterfly.Common
 
         }
 
-        public MessagePackInputFormatter(IFormatterResolver resolver)
+        public MessagePackInputFormatter(MessagePackSerializerOptions options)
         {
-            this.resolver = resolver ?? MessagePackSerializer.DefaultResolver;
+            this.options = this.options ?? MessagePackSerializer.DefaultOptions;
         }
 
         public bool CanRead(InputFormatterContext context)
@@ -76,11 +74,11 @@ namespace Butterfly.Common
             return ContentType == context.HttpContext.Request.ContentType;
         }
 
-        public Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
+        public async Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
         {
             var request = context.HttpContext.Request;
-            var result = MessagePackSerializer.NonGeneric.Deserialize(context.ModelType, request.Body, resolver);
-            return InputFormatterResult.SuccessAsync(result);
+            var result = await MessagePackSerializer.DeserializeAsync(context.ModelType, request.Body, options);
+            return await InputFormatterResult.SuccessAsync(result);
         }
     }
 }

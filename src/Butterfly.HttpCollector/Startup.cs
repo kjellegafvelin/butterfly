@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Butterfly.HttpCollector
 {
@@ -24,10 +25,9 @@ namespace Butterfly.HttpCollector
         {
             var mvcBuilder = services.AddMvc(option =>
             {
-                option.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Instance));
-                option.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Instance));
-            })
-                .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
+                option.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Options));
+                option.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Options));
+            });
 
             services.Configure<HttpCollectorOptions>(option =>
             {
@@ -41,14 +41,14 @@ namespace Butterfly.HttpCollector
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMvc();
+            app.UseRouting();
         }
     }
 }

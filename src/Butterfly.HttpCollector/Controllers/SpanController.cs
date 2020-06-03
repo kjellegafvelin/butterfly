@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using System.Threading.Tasks;
 using Butterfly.Consumer;
 using Butterfly.DataContract.Tracing;
 using Microsoft.AspNetCore.Http;
@@ -18,11 +19,11 @@ namespace Butterfly.HttpCollector.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Span[] spans)
+        public async Task<IActionResult> Post([FromBody] Span[] spans)
         {
             if (spans != null)
             {
-                _spanProducer.PostAsync(spans, CancellationToken.None);
+                await _spanProducer.PostAsync(spans, CancellationToken.None);
             }
             return StatusCode(StatusCodes.Status201Created);
         }
