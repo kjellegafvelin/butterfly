@@ -21,8 +21,8 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.0" />
-    <PackageReference Include="NEST" Version="6.0.0-rc1" />
-    <PackageReference Include="NEST.JsonNetSerializer" Version="6.0.0-rc1" />
+    <PackageReference Include="NEST" Version="6.8.0" />
+    <PackageReference Include="NEST.JsonNetSerializer" Version="6.8.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Butterfly.Core\Butterfly.Core.csproj" />
