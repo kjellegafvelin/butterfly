@@ -17,4 +17,7 @@
     <ProjectReference Include="..\Butterfly.HttpCollector\Butterfly.HttpCollector.csproj" />
     <ProjectReference Include="..\Butterfly.SqlServer\Butterfly.SqlServer.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
 </Project>

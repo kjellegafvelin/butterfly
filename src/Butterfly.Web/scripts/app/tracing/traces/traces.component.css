@@ -1,0 +1,59 @@
+.trace-duration-timeline {
+  background-color: #5caddf;
+  color: #fff;
+  padding-left: 10px;
+  line-height: 24px;
+  height: 26px;
+  border-radius: 4px;
+  font-size: 12px;
+  transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+  opacity: 1;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.trace-data {
+  margin-top: -10px;
+}
+
+.trace-search {
+  width: 160px;
+  margin: 5px 2px;
+}
+
+.trace-limit{
+  width: 50px; 
+  margin: 5px;
+}
+
+.trace-item{ 
+  padding: 5px;
+  color: (0, 0, 0, 0.75);
+}
+
+.trace-duration{
+  background: rgba(0, 0, 0, .04);
+}
+
+.trace-router{
+  text-align: center;
+  line-height:26px;
+}
+
+.trace-Timestamp{
+  text-align: left;
+  line-height:26px;
+  float: left;
+  margin-left: 2px;
+  margin-right: 10px;
+}
+
+.trace-description{
+  padding: 10px 5px 5px 0;
+  font-size: 13px;
+}
+
+.trace-chart{
+  margin-top: 30px;
+  height: 300px;
+}
