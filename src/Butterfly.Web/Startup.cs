@@ -11,6 +11,7 @@ using Butterfly.Common;
 using Butterfly.HttpCollector;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Butterfly.SqlServer.Extensions;
 
 namespace Butterfly.Server
 {
@@ -44,10 +45,16 @@ namespace Butterfly.Server
 
             services.AddSwaggerGen(option => { option.SwaggerDoc("v1", new OpenApiInfo { Title = "butterfly http api", Version = "v1" }); });
 
-            services.AddLiteConsumer(Configuration)
-                .AddEntityFrameworkCore(Configuration);
+            services.AddLiteConsumer(Configuration);
 
-            services.AddElasticsearch(Configuration);
+            services.AddSqlServer(options =>
+            {
+                options.ConnectionString = "Database=Rtjp;Server=localhost;Trusted_Connection=true";
+            });
+
+            //services.AddEntityFrameworkCore(Configuration);
+
+            //services.AddElasticsearch(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

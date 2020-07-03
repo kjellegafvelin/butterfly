@@ -15,5 +15,6 @@
     <ProjectReference Include="..\Butterfly.Elasticsearch\Butterfly.Elasticsearch.csproj" />
     <ProjectReference Include="..\Butterfly.EntityFrameworkCore\Butterfly.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Butterfly.HttpCollector\Butterfly.HttpCollector.csproj" />
+    <ProjectReference Include="..\Butterfly.SqlServer\Butterfly.SqlServer.csproj" />
   </ItemGroup>
 </Project>

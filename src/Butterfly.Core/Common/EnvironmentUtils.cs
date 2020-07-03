@@ -11,5 +11,7 @@
         public const string Elasticsearch = "elasticsearch";
 
         public const string EnableHttpCollector = "enablehttpcollector";
+
+        public const string SqlServer = "sqlserver";
     }
 }
