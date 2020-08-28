@@ -48,4 +48,6 @@ export class SpanViewModel {
     hasChildren: boolean;
 
     level: number;
+
+    hasError: boolean;
 }

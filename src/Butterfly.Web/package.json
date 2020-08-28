@@ -30,6 +30,7 @@
     "@types/echarts": "0.0.9",
     "core-js": "^2.4.1",
     "echarts": "^3.8.5",
+    "font-awesome": "^4.7.0",
     "ng-zorro-antd": "^0.6.7",
     "rxjs": "^5.5.6",
     "vis": "^4.21.0",

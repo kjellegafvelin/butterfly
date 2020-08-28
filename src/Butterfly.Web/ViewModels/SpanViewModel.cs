@@ -27,5 +27,7 @@ namespace Butterfly.Server.ViewModels
         public string ServiceName { get; set; }
         
         public long Offset { get; set; }
+
+        public bool HasError { get; set; }
     }
 }

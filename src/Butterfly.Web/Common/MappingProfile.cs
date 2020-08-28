@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using AutoMapper;
 using Butterfly.DataContract.Tracing;
 using Butterfly.Server.ViewModels;
@@ -31,7 +32,8 @@ namespace Butterfly.Server.Common
                 .ForMember(destination => destination.Children, option => option.Ignore())
                 .ForMember(destination => destination.ServiceName, option => option.MapFrom(span => GetService(span)))
                 .ForMember(destination => destination.StartTimestamp, option => option.MapFrom(span => ToLocalDateTime(span.StartTimestamp)))
-                .ForMember(destination => destination.FinishTimestamp, option => option.MapFrom(span => ToLocalDateTime(span.FinishTimestamp)));
+                .ForMember(destination => destination.FinishTimestamp, option => option.MapFrom(span => ToLocalDateTime(span.FinishTimestamp)))
+                .ForMember(destination => destination.HasError, option => option.MapFrom(span => HasError(span.Tags)));
 
             CreateMap<Span, SpanDetailViewModel>()
                 .ForMember(destination => destination.ServiceName, option => option.MapFrom(span => GetService(span)))
@@ -49,6 +51,11 @@ namespace Butterfly.Server.Common
 
             CreateMap<TraceHistogram, TraceHistogramViewModel>()
                 .ForMember(destination => destination.Time, option => option.MapFrom(target => target.Time.ToString("yyyy-MM-dd HH:mm:ss")));
+        }
+
+        private bool HasError(ICollection<Tag> tags)
+        {
+            return tags.Any(x => x.Key.Equals("error", StringComparison.OrdinalIgnoreCase) && x.Value.Equals("true", StringComparison.OrdinalIgnoreCase));
         }
 
         private static long GetDuration(IEnumerable<Span> spans)
