@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Butterfly.Elasticsearch;
-using Butterfly.EntityFrameworkCore;
 using Butterfly.Consumer.Lite;
 using MessagePack.Resolvers;
 using Microsoft.AspNetCore.Builder;
@@ -10,8 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Butterfly.Common;
 using Butterfly.HttpCollector;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using Butterfly.SqlServer.Extensions;
+using Butterfly.Web.Common;
 
 namespace Butterfly.Server
 {
@@ -27,6 +25,9 @@ namespace Butterfly.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var butterflyOptions = Configuration.GetSection("Butterfly");
+            services.Configure<ButterflyOptions>(butterflyOptions);
+
             var mvcBuilder = services.AddMvc(option =>
             {
                 option.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Options));
@@ -43,18 +44,12 @@ namespace Butterfly.Server
 
             services.AddAutoMapper();
 
-            services.AddSwaggerGen(option => { option.SwaggerDoc("v1", new OpenApiInfo { Title = "butterfly http api", Version = "v1" }); });
-
             services.AddLiteConsumer(Configuration);
 
             services.AddSqlServer(options =>
             {
-                options.ConnectionString = "Database=Rtjp;Server=localhost;Trusted_Connection=true";
+                options.ConnectionString = Configuration.GetConnectionString("ButterflyDb");
             });
-
-            //services.AddEntityFrameworkCore(Configuration);
-
-            //services.AddElasticsearch(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,14 +58,6 @@ namespace Butterfly.Server
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                
-                app.UseSwagger();
-
-                // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "butterfly http api v1");
-                });
             }
             else
             {
@@ -80,18 +67,17 @@ namespace Butterfly.Server
             app.UseResponseCompression();
 
             app.UseCors(cors => cors.AllowAnyOrigin());
-            
+
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseEndpoints(routes =>
             {
-                routes.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                _ = routes.MapControllers();
 
-                routes.MapFallbackToController("Index", "Home");
+                _ = routes.MapFallbackToFile("/index.html");
             });
         }
     }

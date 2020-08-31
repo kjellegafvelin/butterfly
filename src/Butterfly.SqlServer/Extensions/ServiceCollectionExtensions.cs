@@ -17,7 +17,7 @@ namespace Butterfly.SqlServer.Extensions
 
             configure(options);
 
-            services.AddSingleton<SqlServerOptions>(options);
+            services.AddSingleton(options);
 
             services.AddScoped<ISpanStorage, SqlSpanStorage>();
             services.AddScoped<ISpanQuery, SqlSpanQuery>();
