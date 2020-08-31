@@ -5,7 +5,7 @@ export class TimestampSearchViewModel {
     finishTimestamp: Date;
 
     constructor() {
-        this.finishTimestamp = new Date();
+        this.finishTimestamp = null;
         this.startTimestamp = new Date();
         this.startTimestamp.setMinutes(this.startTimestamp.getMinutes() - 60);
     }

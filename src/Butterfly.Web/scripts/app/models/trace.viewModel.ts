@@ -47,7 +47,7 @@ export class SearchTraceViewModel {
 
     constructor() {
         this.limit = 10;
-        this.finishTimestamp = new Date();
+        this.finishTimestamp = null;
         this.startTimestamp = new Date();
         this.startTimestamp.setMinutes(this.startTimestamp.getMinutes() - 60);
     }
