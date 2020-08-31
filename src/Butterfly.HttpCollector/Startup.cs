@@ -1,7 +1,5 @@
 ﻿using Butterfly.Common;
 using Butterfly.Consumer.Lite;
-using Butterfly.Elasticsearch;
-using Butterfly.EntityFrameworkCore;
 using MessagePack.Resolvers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,7 +21,7 @@ namespace Butterfly.HttpCollector
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var mvcBuilder = services.AddMvc(option =>
+            var mvcBuilder = services.AddControllers(option =>
             {
                 option.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Options));
                 option.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Options));
@@ -34,10 +32,7 @@ namespace Butterfly.HttpCollector
                 option.EnableHttpCollector = true;
             });
 
-            services.AddLiteConsumer(Configuration)
-                .AddEntityFrameworkCore(Configuration);
-
-            services.AddElasticsearch(Configuration);
+            services.AddLiteConsumer(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -23,6 +23,7 @@ namespace Butterfly.Server
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Information)
                 .MinimumLevel.Override("Microsoft.AspNetCore", Serilog.Events.LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.AspNetCore.SpaServices", Serilog.Events.LogEventLevel.Information)
                 .MinimumLevel.Override("SoapCore", Serilog.Events.LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()

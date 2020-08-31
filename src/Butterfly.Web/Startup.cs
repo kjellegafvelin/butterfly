@@ -10,6 +10,7 @@ using Butterfly.HttpCollector;
 using Microsoft.Extensions.Hosting;
 using Butterfly.SqlServer.Extensions;
 using Butterfly.Web.Common;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 
 namespace Butterfly.Server
 {
@@ -28,10 +29,15 @@ namespace Butterfly.Server
             var butterflyOptions = Configuration.GetSection("Butterfly");
             services.Configure<ButterflyOptions>(butterflyOptions);
 
-            var mvcBuilder = services.AddMvc(option =>
+            var mvcBuilder = services.AddControllers(options =>
             {
-                option.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Options));
-                option.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Options));
+                options.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Options));
+                options.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Options));
+            });
+
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
             });
 
             mvcBuilder.AddApplicationPart(typeof(HttpCollectorOptions).Assembly);
@@ -68,9 +74,14 @@ namespace Butterfly.Server
 
             app.UseCors(cors => cors.AllowAnyOrigin());
 
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
+            //app.UseDefaultFiles();
 
+            app.UseStaticFiles();
+            if (!env.IsDevelopment())
+            {
+                app.UseSpaStaticFiles();
+            }
+            
             app.UseRouting();
 
             app.UseEndpoints(routes =>
@@ -78,6 +89,20 @@ namespace Butterfly.Server
                 _ = routes.MapControllers();
 
                 _ = routes.MapFallbackToFile("/index.html");
+            });
+
+            app.UseSpa(spa =>
+            {
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
+                
+                spa.Options.SourcePath = "ClientApp";
+                
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                    //spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                }
             });
         }
     }
