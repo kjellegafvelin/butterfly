@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Butterfly.HttpCollector.Controllers
 {
-    [EnableHttpCollector]
     [Route("api/Span")]
     public class SpanController : Controller
     {
@@ -23,7 +22,7 @@ namespace Butterfly.HttpCollector.Controllers
         {
             if (spans != null)
             {
-                await _spanProducer.PostAsync(spans, CancellationToken.None);
+                await _spanProducer.PostAsync(spans, CancellationToken.None).ConfigureAwait(false);
             }
             return StatusCode(StatusCodes.Status201Created);
         }

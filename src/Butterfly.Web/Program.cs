@@ -24,7 +24,6 @@ namespace Butterfly.Server
                 .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Information)
                 .MinimumLevel.Override("Microsoft.AspNetCore", Serilog.Events.LogEventLevel.Warning)
                 .MinimumLevel.Override("Microsoft.AspNetCore.SpaServices", Serilog.Events.LogEventLevel.Information)
-                .MinimumLevel.Override("SoapCore", Serilog.Events.LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .WriteTo.RollingFile(Path.Combine(processRoot, "logs\\Butterfly-server.txt"), fileSizeLimitBytes: 10 * 1024 * 1024)
@@ -57,7 +56,7 @@ namespace Butterfly.Server
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args, string contentRoot) =>
-            Host.CreateDefaultBuilder()
+            Host.CreateDefaultBuilder(args)
             .UseSerilog()
             .UseContentRoot(contentRoot)
             .ConfigureWebHostDefaults(webBuilder =>

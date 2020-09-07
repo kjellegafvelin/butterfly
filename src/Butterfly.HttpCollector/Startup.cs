@@ -27,10 +27,7 @@ namespace Butterfly.HttpCollector
                 option.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Options));
             });
 
-            services.Configure<HttpCollectorOptions>(option =>
-            {
-                option.EnableHttpCollector = true;
-            });
+            services.Configure<HttpCollectorOptions>(Configuration);
 
             services.AddLiteConsumer(Configuration);
         }
