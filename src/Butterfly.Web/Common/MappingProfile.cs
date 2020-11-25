@@ -13,14 +13,15 @@ namespace Butterfly.Server.Common
     {
         public MappingProfile()
         {
-            CreateMap<PageResult<Trace>, PageViewModel<TraceViewModel>>()
+            CreateMap<PageResult<Trace>, PageViewModel<TraceViewModel>>() 
                 .ForMember(destination => destination.PageNumber, option => option.MapFrom(source => source.CurrentPageNumber));
 
             CreateMap<Trace, TraceViewModel>()
                 .ForMember(destination => destination.Duration, option => option.MapFrom(source => GetDuration(source.Spans)))
                 .ForMember(destination => destination.StartTimestamp, option => option.MapFrom(source => ToLocalDateTime(source.Spans.Min(x => x.StartTimestamp))))
                 .ForMember(destination => destination.FinishTimestamp, option => option.MapFrom(source => ToLocalDateTime(source.Spans.Max(x => x.FinishTimestamp))))
-                .ForMember(destination => destination.Services, option => option.Ignore());
+                .ForMember(destination => destination.Services, option => option.Ignore())
+                .ForMember(destination => destination.Operation, option => option.MapFrom(source => source.Spans[0].OperationName));
 
             CreateMap<Trace, TraceDetailViewModel>()
                 .ForMember(destination => destination.Spans, option => option.Ignore())

@@ -16,6 +16,8 @@ export class TraceViewModel {
 
     durationWidth: number;
 
+    operation: string;
+
 }
 
 export class TraceServiceViewModel {

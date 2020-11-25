@@ -14,6 +14,8 @@ namespace Butterfly.Server.ViewModels
         public DateTime FinishTimestamp { get; set; }
 
         public List<TraceService> Services { get; set; }
+
+        public string Operation { get; set; }
     }
 
     public class TraceService
